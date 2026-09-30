@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1a3a">
 <meta name="format-detection" content="telephone=no">
-<title>junel &amp; Julleane – Wedding Invitation</title>
+<title>Amara &amp; Julian – Wedding Invitation</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap">
 <style>
 /* ============================================================
@@ -73,7 +73,11 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0}
 .plan{list-style:none;padding:0;margin:14px 0 0;text-align:left}
 .plan li{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.12)}
 .plan li:last-child{border:0}.plan time{flex:0 0 78px;color:var(--frame);font-weight:500}
-.qr{width:170px;height:170px;margin:14px auto;border:2px dashed var(--gold);display:grid;place-items:center;font-size:.8rem;padding:10px;background-size:cover;background-position:center;background-color:#fff}
+.qrs{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin:16px auto 6px;width:100%}
+.qrbox{margin:0;flex:1 1 150px;max-width:200px;min-width:0}
+.qr{width:100%;aspect-ratio:1;display:grid;place-items:center;font-size:.8rem;padding:10px;background-color:#fff;background-repeat:no-repeat;background-size:contain;background-position:center;border:1px solid rgba(0,0,0,.15);border-radius:10px}
+.qr.ph{border:2px dashed var(--gold)}
+.qrbox figcaption{margin-top:10px;font-family:var(--display);font-size:1.15rem;color:var(--frame);line-height:1.2}
 /* GALLERY ("Our moments")
    Photos keep their own shape and flow in rows that stretch to fill the card.
    Each photo's width follows its shape (--ar, set by script.js), and the target
@@ -126,7 +130,6 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 .petal{will-change:transform}
 .hero .arch{inset:calc(22px + env(safe-area-inset-top,0px)) 20px 28px;height:auto;border-bottom:0}
 .hero>small,.hero .when{max-width:34rem}
-.qr{width:min(190px,60%);height:auto;aspect-ratio:1}
 .photo{background-position:center 30%}
 .plan{max-width:480px;margin-inline:auto}
 img,svg{max-width:100%}
@@ -243,7 +246,7 @@ textarea{min-height:90px}
     <div class="page reveal">
       <h2 data-t="giftTitle"></h2><div class="rule"></div>
       <p data-t="giftText"></p>
-      <div class="qr" id="qr"></div>
+      <div class="qrs" id="qrs"></div>
       <p style="opacity:.75" data-t="giftNote"></p>
     </div>
     <div class="page reveal gal">
@@ -298,7 +301,7 @@ const CONFIG = {
 
   // ---- Schedule (add or remove lines) ----
   scheduleTitle: "Schedule",
-  schedule: [
+   schedule: [
     ["8:00 AM", "Ceremony", "Please arrive by 7:30 AM"],
     ["10:30 AM", "Program Proper", "Sto Dominic of Guzman Parish, Legazpi Hall"],
     ["12:00 NN", "Lunch and Pantomina", "Sto Dominic of Guzman Parish, Legazpi Hall"]
@@ -306,10 +309,12 @@ const CONFIG = {
 
   // ---- Gift, gallery, RSVP ----
   giftTitle: "Gifts",
-  giftText: "Your love is the best gift. If you wish to give something, you may scan the code below.",
-  giftNote: "Replace this box with your QR image (set qrImage).",
-  qrImage: "gcash.jpg",                           // e.g. "qr.png" (file next to this page)
-  qrImage: "Landbank.jpg",                           // e.g. "qr.png" (file next to this page)
+  giftText: "Your love is the best gift. If you wish to give something, you may scan either code below.",
+  giftNote: "Replace these boxes with your QR images (set qrCodes).",
+  qrCodes: [                             // label = text under the code, image = file next to this page
+    { label: "GCash", image: "" },       // e.g. image: "gcash.png"
+    { label: "Maya",  image: "" }        // e.g. image: "maya.png"
+  ],
   galleryTitle: "Our moments",
   gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
   photo: "",                             // couple photo, e.g. "couple.jpg"
@@ -351,7 +356,7 @@ cal.innerHTML = h;
 
 // Images (blank keeps the colored placeholder)
 if(C.photo) $("#photo").style.backgroundImage = `linear-gradient(transparent 60%,rgba(0,0,0,.5)),url("${C.photo}")`, $(".hint").hidden = true;
-if(C.qrImage) $("#qr").style.backgroundImage = `url("${C.qrImage}")`; else $("#qr").textContent = "QR code";
+$("#qrs").innerHTML = C.qrCodes.map(q => `<figure class="qrbox"><div class="qr${q.image?"":" ph"}"${q.image?` role="img" aria-label="${q.label} QR code" style="background-image:url('${q.image}')"`:""}>${q.image?"":"QR code"}</div><figcaption>${q.label}</figcaption></figure>`).join("");
 const PH_AR = [0.75, 1, 1.33];   // placeholder shapes until real photos are set
 $("#gallery").innerHTML = C.gallery.map((g,i)=> g
   ? `<figure class="shot"><img src="${g}" alt="Photo ${i+1}" decoding="async"></figure>`
@@ -361,7 +366,7 @@ document.querySelectorAll("#gallery .shot img").forEach(img=>{
   const fit = () => { if(img.naturalWidth) img.parentNode.style.setProperty("--ar", (img.naturalWidth/img.naturalHeight).toFixed(4)); };
   img.complete ? fit() : img.addEventListener("load", fit);
 });
-if(C.qrImage) $("[data-t=giftNote]").textContent = "";
+if(C.qrCodes.every(q => q.image)) $("[data-t=giftNote]").textContent = "";
 
 // Theme
 applyTheme(C.theme);
