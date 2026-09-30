@@ -312,8 +312,8 @@ const CONFIG = {
   giftText: "Your love is the best gift. If you wish to give something, you may scan either code below.",
   giftNote: "Replace these boxes with your QR images (set qrCodes).",
   qrCodes: [                             // label = text under the code, image = file next to this page
-    { label: "GCash", image: "" },       // e.g. image: "gcash.png"
-    { label: "Maya",  image: "" }        // e.g. image: "maya.png"
+    { label: "GCash", image: "gcash.jpg" },       // e.g. image: "gcash.png"
+    { label: "Landbank",  image: "Landbank.jpg" }        // e.g. image: "maya.png"
   ],
   galleryTitle: "Our moments",
   gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
@@ -322,14 +322,14 @@ const CONFIG = {
   rsvpText: "Please reply by 1 October 2026",
   // Google Form link: run rsvp-google-form.gs, then paste the 5 values it prints
   googleForm: {
-    action: "",                          // ends with /formResponse
-    name: "",                            // entry.xxxxxxxxx  (full name)
-    attend: "",                          // entry.xxxxxxxxx  (accept / decline)
-    guests: "",                          // entry.xxxxxxxxx  (number of guests)
-    note: ""                             // entry.xxxxxxxxx  (optional note)
+    action: "https://docs.google.com/forms/d/e/1FAIpQLSe7sGyVx0Zg_UIl0PaEwzpuItEKvpFF008wRpQH0JliBJ0Q1Q/formResponse",                          // ends with /formResponse
+    name: "entry.1116968952",                            // entry.xxxxxxxxx  (full name)
+    attend: "entry.402081541",                          // entry.xxxxxxxxx  (accept / decline)
+    guests: "entry.216696421",                          // entry.xxxxxxxxx  (number of guests)
+    note: "entry.511326714"                             // entry.xxxxxxxxx  (optional note)
   },
   rsvpEndpoint: "",                      // optional: another web app URL (used only if googleForm.action is empty)
-  rsvpEmail: "rsvp@example.com",         // used only if both of the above are empty
+  rsvpEmail: "mattglennl83@gmail.com",         // used only if both of the above are empty
   closing: "With love, Jonel and Julleane",
 
   // ---- COLORS ----
