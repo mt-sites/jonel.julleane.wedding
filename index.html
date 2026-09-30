@@ -310,18 +310,26 @@ const CONFIG = {
   // ---- Gift, gallery, RSVP ----
   giftTitle: "Gifts",
   giftText: "Your love is the best gift. If you wish to give something, you may scan either code below.",
-  giftNote: "",
+  giftNote: "Replace these boxes with your QR images (set qrCodes).",
   qrCodes: [                             // label = text under the code, image = file next to this page
-    { label: "GCash", image: "gcash.jpg" },       // e.g. image: "gcash.png"
-    { label: "Landbank",  image: "Landbank.jpg" }        // e.g. image: "maya.png"
+    { label: "GCash", image: "" },       // e.g. image: "gcash.png"
+    { label: "Maya",  image: "" }        // e.g. image: "maya.png"
   ],
   galleryTitle: "Our moments",
   gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
   photo: "",                             // couple photo, e.g. "couple.jpg"
   rsvpTitle: "RSVP",
   rsvpText: "Please reply by 1 October 2026",
-  rsvpEndpoint: "",                      // paste your Google Sheet web app URL here (see setup steps)
-  rsvpEmail: "rsvp@example.com",         // used only if rsvpEndpoint is empty
+  // Google Form link: run rsvp-google-form.gs, then paste the 5 values it prints
+  googleForm: {
+    action: "",                          // ends with /formResponse
+    name: "",                            // entry.xxxxxxxxx  (full name)
+    attend: "",                          // entry.xxxxxxxxx  (accept / decline)
+    guests: "",                          // entry.xxxxxxxxx  (number of guests)
+    note: ""                             // entry.xxxxxxxxx  (optional note)
+  },
+  rsvpEndpoint: "",                      // optional: another web app URL (used only if googleForm.action is empty)
+  rsvpEmail: "rsvp@example.com",         // used only if both of the above are empty
   closing: "With love, Jonel and Julleane",
 
   // ---- COLORS ----
@@ -396,14 +404,24 @@ cover.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" ") open()
 // RSVP
 $("#rsvpForm").addEventListener("submit", e => {
   e.preventDefault(); const f = new FormData(e.target);
-  if(C.rsvpEndpoint){
+  const g = C.googleForm || {};
+  let url = "", data = null;
+  if(g.action && g.name && g.attend && g.guests){          // 1) Google Form
+    url = g.action; data = new URLSearchParams();
+    data.append(g.name, f.get("name")); data.append(g.attend, f.get("attend")); data.append(g.guests, f.get("guests"));
+    if(g.note) data.append(g.note, f.get("note") || "");
+  } else if(C.rsvpEndpoint){                                // 2) other web app
+    url = C.rsvpEndpoint; data = new URLSearchParams(f);
+  }
+  if(url){
     const t = $("#thanks"), btn = e.target.querySelector("button"); btn.disabled = true;
-    fetch(C.rsvpEndpoint, {method:"POST", mode:"no-cors", body:new URLSearchParams(f)})
+    fetch(url, {method:"POST", mode:"no-cors", body:data})
       .then(()=>{ t.textContent = "Thank you! Your reply has been received."; t.style.display = "block"; e.target.reset(); btn.disabled = false; })
       .catch(()=>{ t.textContent = "Sorry, something went wrong. Please try again."; t.style.display = "block"; btn.disabled = false; });
     return;
   }
-  const body = ["Name: "+f.get("name"),"Response: "+f.get("attend"),"Guests: "+f.get("guests"),"Meal or dietary needs: "+(f.get("diet")||"None"),"Note: "+(f.get("note")||"None")].join("\n");
+  // 3) Fallback: open an email
+  const body = ["Name: "+f.get("name"),"Response: "+f.get("attend"),"Guests: "+f.get("guests"),"Note: "+(f.get("note")||"None")].join("\n");
   $("#thanks").style.display = "block";
   location.href = "mailto:"+C.rsvpEmail+"?subject="+encodeURIComponent("RSVP – "+f.get("name"))+"&body="+encodeURIComponent(body);
 });
