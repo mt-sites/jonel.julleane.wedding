@@ -75,6 +75,10 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0}
 .page:last-child{margin-bottom:0}
 .page h2{font-size:1.9rem;margin-bottom:12px;color:var(--frame)}
 .page p{margin:8px 0}
+.credits{grid-column:1/-1;margin:14px 0 0;text-align:center;font-size:.7rem;line-height:1.5;letter-spacing:.03em;color:var(--frame);opacity:.65}
+.credits:empty{display:none}
+.credits a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.credits a:hover{opacity:1;color:var(--ink)}
 .rule{width:120px;height:14px;background:var(--orn) center/contain no-repeat;margin:12px auto 16px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;max-width:300px;margin:16px auto;font-size:.9rem}
 .cal b{font-weight:500;color:var(--frame)}
@@ -291,6 +295,7 @@ textarea{min-height:90px}
       <div id="thanks">Your email is ready to send. Thank you for replying!</div>
     </div>
     <div class="page reveal"><h2 data-t="closing"></h2></div>
+    <p class="credits" id="credits"></p>
   </div>
   <a class="fab" href="#rsvp" aria-label="Go to RSVP">RSVP</a>
 </div>
@@ -334,8 +339,8 @@ const CONFIG = {
 
   // ---- Gift, gallery, RSVP ----
   giftTitle: "Gifts",
-  giftText: "Please do not feel obliged to give us a gift. Your presence on our wedding is enough. However, if you wish to give us something, monetary gift will be greatly appreciated.",
-  giftNote: "",
+  giftText: "Your love is the best gift. If you wish to give something, you may scan either code below.",
+  giftNote: "Replace these boxes with your QR images (set qrCodes).",
   qrCodes: [                             // label = text under the code, image = file next to this page
     { label: "GCash", image: "gcash.jpg" },       // e.g. image: "gcash.png"
     { label: "Landbank",  image: "Landbank.jpg" }        // e.g. image: "maya.png"
@@ -344,7 +349,7 @@ const CONFIG = {
   gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
   photo: "",                             // couple photo, e.g. "couple.jpg"
   rsvpTitle: "RSVP",
-  rsvpText: "Please reply by 30 October 2026",
+  rsvpText: "Please reply by 1 October 2026",
   // Google Form link: run rsvp-google-form.gs, then paste the 5 values it prints
   googleForm: {
     action: "https://docs.google.com/forms/d/e/1FAIpQLSe7sGyVx0Zg_UIl0PaEwzpuItEKvpFF008wRpQH0JliBJ0Q1Q/formResponse",                          // ends with /formResponse
@@ -356,7 +361,7 @@ const CONFIG = {
   rsvpEndpoint: "",                      // optional: another web app URL (used only if googleForm.action is empty)
   rsvpEmail: "mattglennl83@gmail.com",         // used only if both of the above are empty
   closing: "With love, Jonel and Julleane",
-  credits: "Invitation website made:",    // small text at the very bottom (clear it to hide)
+  credits: "Invitation website made by:",    // small text at the very bottom (clear it to hide)
   creditsLinkText: "mt.sites",                  // the clickable part
   creditsUrl: "https://github.com/mt-sites",                         // where the link goes
 
@@ -381,6 +386,10 @@ function applyTheme(n){
 document.querySelectorAll("[data-t]").forEach(e => e.textContent = C[e.dataset.t]);
 document.title = C.name1 + " & " + C.name2 + " – Wedding Invitation";
 $("#map").href = C.mapUrl;
+{ const cr = $("#credits"); cr.textContent = C.credits || "";
+  if(C.creditsLinkText && C.creditsUrl){ const a = document.createElement("a");
+    a.href = C.creditsUrl; a.textContent = C.creditsLinkText; a.target = "_blank"; a.rel = "noopener";
+    if(cr.textContent) cr.append(" "); cr.append(a); } }
 $("#sw").innerHTML = C.dressColors.map(c => `<span style="background:${c}"></span>`).join("");
 $("#plan").innerHTML = C.schedule.map(s => `<li><time>${s[0]}</time><span><b style="font-weight:500">${s[1]}</b><br><span style="opacity:.75">${s[2]||""}</span></span></li>`).join("");
 
