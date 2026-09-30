@@ -17,14 +17,14 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:#222;font-family:var(--body);font-weight:300;line-height:1.65;color:var(--ink)}
-#app{max-width:480px;margin:0 auto;background:var(--paper);min-height:100svh;position:relative;overflow:hidden}
+#app{width:100%;max-width:none;margin:0 auto;background:var(--paper);min-height:100svh;position:relative;overflow:hidden}
 h1,h2{font-family:var(--display);font-weight:400;margin:0}
 .pattern{background-image:linear-gradient(45deg,rgba(255,255,255,.14) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.14) 75%),linear-gradient(45deg,rgba(255,255,255,.14) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.14) 75%);background-size:28px 28px;background-position:0 0,14px 14px}
 .lace{position:absolute;left:0;right:0;height:26px;background:radial-gradient(circle at 13px 0,transparent 11px,var(--light) 12px) 0 0/26px 26px repeat-x;opacity:.9}
 .lace.top{top:0}.lace.bot{bottom:0;transform:scaleY(-1)}
 
 /* COVER (doors) */
-#cover{position:fixed;inset:0;z-index:50;display:flex;max-width:480px;margin:0 auto;cursor:pointer}
+#cover{position:fixed;inset:0;z-index:50;display:flex;cursor:pointer}
 #cover .door{flex:1;background-color:var(--cover);transition:transform 1.1s cubic-bezier(.7,0,.2,1);position:relative}
 #cover .l{border-right:1px solid rgba(0,0,0,.25)}
 #cover.open .l{transform:translateX(-101%)}#cover.open .r{transform:translateX(101%)}
@@ -106,18 +106,23 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 #cover,.btn,.fab,label.ch,button{touch-action:manipulation}
 .petal{will-change:transform}
 .hero .arch{inset:calc(22px + env(safe-area-inset-top,0px)) 20px 28px;height:auto;border-bottom:0}
+.hero>small,.hero .when{max-width:34rem}
+.qr{width:min(190px,60%);height:auto;aspect-ratio:1}
+.photo{background-position:center 30%}
+.plan{max-width:480px;margin-inline:auto}
+img,svg{max-width:100%}
 #cover{height:100vh;height:100dvh}
 .hero,.photo{min-height:100vh;min-height:100svh}
 .hero{padding:calc(70px + env(safe-area-inset-top,0px)) 24px calc(60px + env(safe-area-inset-bottom,0px))}
 .photo{padding:32px 32px calc(40px + env(safe-area-inset-bottom,0px))}
-.frame{padding:16px 16px calc(90px + env(safe-area-inset-bottom,0px))}
+.frame{padding:16px max(16px,calc((100% - 640px)/2)) calc(90px + env(safe-area-inset-bottom,0px))}
 .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center;padding:12px 30px}
 form .btn{width:100%}
 input,select,textarea{font-size:16px;min-height:48px}
 textarea{min-height:90px}
 .ch{min-height:48px;padding:6px 12px;border:1px solid rgba(0,0,0,.2);border-radius:8px;background:#fff}
 .ch input{width:22px;height:22px;min-height:0;flex:0 0 22px}
-.fab{width:52px;height:52px;right:max(14px,env(safe-area-inset-right,0px),calc(50% - 226px))}
+.fab{width:52px;height:52px;right:max(14px,env(safe-area-inset-right,0px))}
 .page a.btn{margin-top:6px}
 @media (max-width:480px){
   body{font-size:16px}
@@ -126,6 +131,42 @@ textarea{min-height:90px}
   .plan time{flex-basis:70px}
   .cal{gap:2px;font-size:.85rem}
   .cal span,.cal b{padding:5px 0}
+}
+
+/* RESPONSIVE: tablet, laptop and desktop */
+@media (min-width:768px){
+  body{font-size:17px}
+  #seal,#seal svg{width:190px}
+  .hero{padding-inline:48px}
+  .hero .arch{left:50%;right:auto;width:min(640px,calc(100% - 48px));transform:translateX(-50%);border-radius:320px 320px 0 0}
+  .hero svg.chand{width:150px}
+  .names{font-size:clamp(3.8rem,7.5vw,7rem)}
+  .hero .when{font-size:1.4rem}
+  .hero>small{font-size:1.05rem}
+  .photo{min-height:min(100svh,860px);padding:48px}
+  .frame{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:stretch;padding:40px max(32px,calc((100% - 1040px)/2)) calc(100px + env(safe-area-inset-bottom,0px))}
+  .frame .page{margin:0;padding:52px 36px;display:flex;flex-direction:column;align-items:center;border-radius:40px 40px 20px 20px}
+  .frame .page:nth-child(1),.frame .page:nth-child(6),.frame .page:nth-child(7){grid-column:1/-1}
+  .page h2{font-size:2.1rem}
+  .cal{max-width:340px;width:100%}
+  .plan{width:100%}
+  .grid{width:100%;margin-top:auto;padding-top:14px}
+  #rsvp form{width:100%;max-width:560px}
+  #rsvp form .btn{width:100%}
+  .fab{right:max(24px,env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+  .btn,.fab{transition:transform .2s ease,filter .2s ease}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+}
+@media (min-width:1200px){
+  body{font-size:18px}
+  .names{font-size:clamp(5rem,7vw,8rem)}
+  .hero svg.chand{width:170px}
+  .page h2{font-size:2.4rem}
+  .frame{gap:26px;padding-top:56px}
+  .frame .page{padding:60px 48px}
+}
+@media (min-width:1600px){
+  .frame{padding-inline:max(32px,calc((100% - 1200px)/2))}
 }
 @media (max-height:520px) and (orientation:landscape){
   .hero{padding-top:50px;padding-bottom:40px}
@@ -298,7 +339,7 @@ if(C.qrImage) $("[data-t=giftNote]").textContent = "";
 applyTheme(C.theme);
 // Petals
 document.querySelectorAll(".petals").forEach(box=>{
-  for(let i=0;i<(innerWidth<500?10:16);i++){
+  for(let i=0;i<(innerWidth<500?10:innerWidth<1000?16:26);i++){
     const p=document.createElement("span");
     p.className="petal"+(i%2?" w":"");
     p.style.left=(Math.random()*100)+"%";
