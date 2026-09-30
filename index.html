@@ -9,6 +9,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap">
 <style>
 /* ============================================================
+   STYLE.CSS  (layout and look)
+   Sections in order:
+   1. Base and colors    2. Cover doors    3. Hero    4. Photo
+   5. Invitation cards   6. Gallery        7. Form    8. Motion
+   9. Mobile tweaks     10. Tablet / desktop (media queries)
+   Colors themselves are set in script.js (CONFIG > themes).
+   ============================================================ */
+/* ============================================================
    COLORS: these are filled in by the theme chosen in CONFIG
    (bottom of file). Edit the palettes there, not here.
    ============================================================ */
@@ -65,9 +73,19 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0}
 .plan li{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.12)}
 .plan li:last-child{border:0}.plan time{flex:0 0 78px;color:var(--frame);font-weight:500}
 .qr{width:170px;height:170px;margin:14px auto;border:2px dashed var(--gold);display:grid;place-items:center;font-size:.8rem;padding:10px;background-size:cover;background-position:center;background-color:#fff}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.grid div{aspect-ratio:1;background:var(--frame);border-radius:8px;background-size:cover;background-position:center;display:grid;place-items:center;color:var(--light);font-size:.75rem}
-.grid div:nth-child(3){grid-column:span 2;aspect-ratio:2/1}
+/* GALLERY ("Our moments")
+   Photos keep their own shape and flow in rows that stretch to fill the card.
+   Each photo's width follows its shape (--ar, set by script.js), and the target
+   row height scales with the width of the card (--row-h), so sizes adapt to
+   wherever the gallery sits: phone, tablet or desktop. */
+.gal{container-type:inline-size;width:100%}
+.grid{--row-h:clamp(100px,36cqw,190px);--gallery-gap:8px;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:var(--gallery-gap);margin-top:14px;width:100%}
+.shot{--ar:1;margin:0;min-width:0;border-radius:8px;overflow:hidden;background:var(--frame);
+  flex-grow:var(--ar);flex-shrink:1;flex-basis:calc(var(--ar) * var(--row-h));
+  max-width:calc(var(--ar) * var(--row-h) * 1.5)}
+.shot img{display:block;width:100%;height:auto;aspect-ratio:var(--ar);object-fit:cover}
+.shot.ph{display:grid;place-items:center;color:var(--light);font-size:.75rem;aspect-ratio:var(--ar)}
 form{display:grid;gap:14px;text-align:left;margin-top:16px}
 label{display:grid;gap:5px;font-weight:400;font-size:.92rem}
 input,select,textarea{font:inherit;font-weight:300;color:var(--ink);background:#fff;border:1px solid rgba(0,0,0,.25);border-radius:6px;padding:11px;width:100%}
@@ -150,7 +168,6 @@ textarea{min-height:90px}
   .page h2{font-size:2.1rem}
   .cal{max-width:340px;width:100%}
   .plan{width:100%}
-  .grid{width:100%;margin-top:auto;padding-top:14px}
   #rsvp form{width:100%;max-width:560px}
   #rsvp form .btn{width:100%}
   .fab{right:max(24px,env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px))}
@@ -228,7 +245,7 @@ textarea{min-height:90px}
       <div class="qr" id="qr"></div>
       <p style="opacity:.75" data-t="giftNote"></p>
     </div>
-    <div class="page reveal">
+    <div class="page reveal gal">
       <h2 data-t="galleryTitle"></h2><div class="rule"></div>
       <div class="grid" id="gallery"></div>
     </div>
@@ -254,6 +271,7 @@ textarea{min-height:90px}
 
 <script>
 /* ============================================================
+   SCRIPT.JS  (your words, photos and settings live in CONFIG below)
    EDIT EVERYTHING HERE. Save the file, then refresh the browser.
    ============================================================ */
 const CONFIG = {
@@ -291,7 +309,7 @@ const CONFIG = {
   giftNote: "Replace this box with your QR image (set qrImage).",
   qrImage: "",                           // e.g. "qr.png" (file next to this page)
   galleryTitle: "Our moments",
-  gallery: ["", "", "", ""],             // e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg"]
+  gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
   photo: "",                             // couple photo, e.g. "couple.jpg"
   rsvpTitle: "RSVP",
   rsvpText: "Please reply by 1 October 2026",
@@ -332,7 +350,15 @@ cal.innerHTML = h;
 // Images (blank keeps the colored placeholder)
 if(C.photo) $("#photo").style.backgroundImage = `linear-gradient(transparent 60%,rgba(0,0,0,.5)),url("${C.photo}")`, $(".hint").hidden = true;
 if(C.qrImage) $("#qr").style.backgroundImage = `url("${C.qrImage}")`; else $("#qr").textContent = "QR code";
-$("#gallery").innerHTML = C.gallery.map((g,i)=>`<div style="${g?`background-image:url('${g}')`:""}">${g?"":"Photo "+(i+1)}</div>`).join("");
+const PH_AR = [0.75, 1, 1.33];   // placeholder shapes until real photos are set
+$("#gallery").innerHTML = C.gallery.map((g,i)=> g
+  ? `<figure class="shot"><img src="${g}" alt="Photo ${i+1}" decoding="async"></figure>`
+  : `<figure class="shot ph" style="--ar:${PH_AR[i%3]}">Photo ${i+1}</figure>`).join("");
+// Size each photo by its own shape so rows fill the card neatly
+document.querySelectorAll("#gallery .shot img").forEach(img=>{
+  const fit = () => { if(img.naturalWidth) img.parentNode.style.setProperty("--ar", (img.naturalWidth/img.naturalHeight).toFixed(4)); };
+  img.complete ? fit() : img.addEventListener("load", fit);
+});
 if(C.qrImage) $("[data-t=giftNote]").textContent = "";
 
 // Theme
