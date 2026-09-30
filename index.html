@@ -397,7 +397,15 @@ const io=("IntersectionObserver" in window)?new IntersectionObserver(es=>es.forE
 document.querySelectorAll(".reveal").forEach(e=>io?io.observe(e):e.classList.add("in"));
 
 // Cover
-const cover = $("#cover"), open = () => { cover.classList.add("open"); $("#app").classList.add("go"); };
+// Every visit starts at the first page: no restored scroll position, no #rsvp jump
+if("scrollRestoration" in history) history.scrollRestoration = "manual";
+const toTop = () => window.scrollTo({top:0, left:0, behavior:"instant"});
+const clearHash = () => { if(location.hash) history.replaceState(null, "", location.pathname + location.search); };
+clearHash(); toTop();
+addEventListener("load", () => { clearHash(); toTop(); });
+addEventListener("pageshow", e => { if(e.persisted){ clearHash(); toTop(); } });
+
+const cover = $("#cover"), open = () => { toTop(); cover.classList.add("open"); $("#app").classList.add("go"); };
 cover.addEventListener("click", open);
 cover.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" ") open(); });
 
