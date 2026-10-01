@@ -35,15 +35,42 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0}
 .lace.top{top:0}.lace.bot{bottom:0;transform:scaleY(-1)}
 
 /* COVER (doors) */
-#cover{position:fixed;inset:0;z-index:50;display:flex;cursor:pointer}
-#cover .door{flex:1;background-color:var(--cover);background-image:radial-gradient(ellipse at 50% 30%,var(--cover2),var(--cover) 70%);background-size:200% 100%;background-repeat:no-repeat;transition:transform 1.1s cubic-bezier(.7,0,.2,1);position:relative;overflow:hidden}
+#cover{position:fixed;inset:0;z-index:50;display:flex;cursor:pointer;perspective:1800px;perspective-origin:50% 50%}
+#cover .door{flex:1;background-color:var(--cover);background-image:radial-gradient(ellipse at 50% 30%,var(--cover2),var(--cover) 70%);background-size:200% 100%;background-repeat:no-repeat;transition:transform 1.8s cubic-bezier(.65,0,.25,1) .3s,filter 1.4s ease .3s;position:relative;overflow:hidden;will-change:transform}
 #cover .door.l{background-position:0 0}#cover .door.r{background-position:100% 0}
 #cover .l{border-right:1px solid rgba(0,0,0,.25)}
-#cover.open .l{transform:translateX(-101%)}#cover.open .r{transform:translateX(101%)}
-#cover.open{pointer-events:none;transition:opacity 0s 1.2s;opacity:0}
+#cover .door.l{transform-origin:0 50%}#cover .door.r{transform-origin:100% 50%}
+#cover.open .l{transform:rotateY(84deg);filter:brightness(.45)}#cover.open .r{transform:rotateY(-84deg);filter:brightness(.45)}
+#cover.open{pointer-events:none;transition:opacity .8s ease 2s;opacity:0}
+
+/* OPENING EFFECTS: golden light, rays, rings and a burst of fairy dust */
+#cover .glow{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,rgba(255,243,208,.98) 0,rgba(243,209,128,.75) 20%,rgba(216,180,94,.3) 44%,transparent 72%)}
+#cover.open .glow{animation:glowIn 2.1s ease .1s forwards}
+@keyframes glowIn{0%{opacity:0}22%{opacity:1}100%{opacity:.25}}
+#cover .rays{position:absolute;left:50%;top:50%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:repeating-conic-gradient(from 0deg,rgba(255,232,168,.5) 0 3deg,transparent 3deg 11deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 46%);mask-image:radial-gradient(circle,#000 0,transparent 46%)}
+#cover.open .rays{animation:raysGo 2.1s ease-out forwards}
+@keyframes raysGo{0%{opacity:0;transform:rotate(0) scale(.5)}25%{opacity:.95}100%{opacity:0;transform:rotate(38deg) scale(1.15)}}
+#cover .beam{position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);pointer-events:none;opacity:.45;
+  background:linear-gradient(transparent,#ffeab0 18%,#ffeab0 82%,transparent);box-shadow:0 0 22px 6px rgba(255,226,150,.55);animation:beamIdle 2.6s ease-in-out infinite}
+@keyframes beamIdle{50%{opacity:.8;box-shadow:0 0 30px 10px rgba(255,226,150,.75)}}
+#cover.open .beam{animation:beamOpen 1.6s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes beamOpen{0%{opacity:1;width:2px}35%{opacity:1;width:34vw;box-shadow:0 0 90px 40px rgba(255,226,150,.85)}100%{opacity:0;width:90vw;box-shadow:0 0 140px 80px rgba(255,226,150,.3)}}
+#cover .ring{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:2px solid rgba(255,226,150,.9);box-shadow:0 0 24px rgba(255,226,150,.7),inset 0 0 24px rgba(255,226,150,.5);opacity:0;pointer-events:none}
+#cover.open .ring{animation:ringGo 1.5s cubic-bezier(.2,.6,.3,1) forwards}
+#cover.open .ring.r2{animation-delay:.28s}
+@keyframes ringGo{0%{opacity:.95;transform:scale(.4)}100%{opacity:0;transform:scale(7)}}
+#cover .dust{position:absolute;left:50%;top:50%;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2);border-radius:50%;background:var(--c);box-shadow:0 0 10px 2px var(--c);opacity:0;pointer-events:none;animation:burst var(--t) cubic-bezier(.15,.7,.25,1) var(--d) forwards}
+#cover .dust.st{border-radius:0;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);box-shadow:none;filter:drop-shadow(0 0 5px var(--c))}
+@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.2)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.5) rotate(180deg)}}
 #seal{position:absolute;left:50%;top:50%;width:150px;transform:translate(-50%,-50%);z-index:2;text-align:center;color:var(--light);transition:opacity .4s}
-#cover.open #seal{opacity:0}
-#seal svg{width:150px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+#cover.open #seal p{opacity:0;transition:opacity .3s}
+#seal svg{width:150px;filter:drop-shadow(0 0 14px rgba(216,180,94,.6)) drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+#cover.open #seal svg{animation:sealOpen 1.1s cubic-bezier(.3,.6,.3,1) forwards}
+@keyframes sealOpen{0%{transform:scale(1) rotate(0);opacity:1;filter:drop-shadow(0 0 14px rgba(216,180,94,.6))}
+  30%{transform:scale(1.28) rotate(22deg);opacity:1;filter:brightness(1.5) drop-shadow(0 0 40px rgba(255,226,150,1))}
+  100%{transform:scale(2.6) rotate(110deg);opacity:0;filter:brightness(2) drop-shadow(0 0 60px rgba(255,226,150,1))}}
 #seal p{margin:10px 0 0;font-size:.85rem;letter-spacing:.08em}
 
 /* HERO */
@@ -118,7 +145,7 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}legend{font-weight:400
 .ch{display:flex;gap:10px;align-items:center;font-weight:300}.ch input{width:auto}
 #thanks{display:none;margin-top:16px;padding:14px;border:1px solid var(--gold);border-radius:8px}
 .fab{position:fixed;right:max(12px,calc(50% - 228px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;background:var(--gold);color:#2a1a05;border:0;font:500 .7rem var(--body);cursor:pointer;z-index:40;box-shadow:0 3px 8px rgba(0,0,0,.35);text-decoration:none;display:grid;place-items:center}
-@media (prefers-reduced-motion:reduce){#cover .door{transition:none}.spark{animation:none}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){#cover .door{transition:none}.spark{animation:none}html{scroll-behavior:auto}#cover .glow,#cover .rays,#cover .beam,#cover .ring,#cover .dust{display:none}#cover.open .l,#cover.open .r{transform:none;filter:none}#cover.open{transition:opacity .5s ease}#app.go .hero,#app.go .hero .arch{animation:none}}
 
 /* MOTION */
 .hero{overflow:hidden}.photo{overflow:hidden}
@@ -131,7 +158,11 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}legend{font-weight:400
 #seal svg{animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.07)}}
 .hero .rise{opacity:0;transform:translateY(22px)}
-#app.go .rise{animation:rise 1.1s ease forwards;animation-delay:calc(var(--i)*.28s + .5s)}
+#app.go .rise{animation:rise 1.1s ease forwards;animation-delay:calc(var(--i)*.28s + .9s)}
+#app.go .hero{animation:heroIn 2.6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes heroIn{from{transform:scale(1.12);filter:brightness(1.8) blur(5px)}to{transform:none;filter:none}}
+#app.go .hero .arch{animation:archIn 2s ease .7s both}
+@keyframes archIn{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
 @keyframes rise{to{opacity:1;transform:none}}
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
 .reveal.in{opacity:1;transform:none}
@@ -139,6 +170,14 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}legend{font-weight:400
 .names i{animation:glow 3s ease-in-out infinite}
 @keyframes glow{50%{text-shadow:0 0 14px var(--gold)}}
 .fab{animation:bob 2.8s ease-in-out infinite}
+#musicBtn{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:46px;height:46px;padding:0;border-radius:50%;border:1px solid rgba(216,180,94,.75);background:rgba(11,26,58,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--gold);display:none;place-items:center;cursor:pointer;z-index:40;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+#musicBtn:not([hidden]){display:grid}
+#musicBtn .slash{opacity:0}
+#musicBtn.off .slash{opacity:1}
+#musicBtn.playing{animation:musicGlow 2.4s ease-in-out infinite}
+@keyframes musicGlow{50%{box-shadow:0 0 0 6px rgba(216,180,94,.18),0 3px 8px rgba(0,0,0,.3)}}
+@media (min-width:768px){#musicBtn{left:max(24px,env(safe-area-inset-left,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
+@media (prefers-reduced-motion:reduce){#musicBtn.playing{animation:none}}
 @keyframes bob{50%{transform:translateY(-5px)}}
 @media (prefers-reduced-motion:reduce){.petal{display:none}.hero svg.chand,#seal svg,.rule,.names i,.fab{animation:none}.hero .rise,.reveal{opacity:1;transform:none;transition:none}#app.go .rise{animation:none}}
 
@@ -218,8 +257,10 @@ textarea{min-height:90px}
 </head>
 <body>
 <div id="cover" role="button" tabindex="0" aria-label="Open invitation">
+  <div class="glow"></div>
   <div class="door l"><div class="petals"></div><span class="spark" style="top:28%;left:30%"></span><span class="spark" style="top:62%;left:70%;animation-delay:1.4s"></span><div class="lace top"></div><div class="lace bot"></div></div>
   <div class="door r"><div class="petals"></div><span class="spark" style="top:40%;left:60%;animation-delay:.7s"></span><span class="spark" style="top:70%;left:25%;animation-delay:2.1s"></span><div class="lace top"></div><div class="lace bot"></div></div>
+  <div class="rays"></div><div class="beam"></div><div class="ring"></div><div class="ring r2"></div>
   <div id="seal">
     <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><path d="M50 4c8 16 18 26 34 30-16 4-26 14-34 30-8-16-18-26-34-30 16-4 26-14 34-30Z" fill="var(--light)" stroke="var(--gold)"/><path d="M50 22c5 10 11 16 20 18-9 2-15 8-20 18-5-10-11-16-20-18 9-2 15-8 20-18Z" fill="var(--cover)"/><circle cx="50" cy="40" r="5" fill="var(--gold)" stroke="none"/></svg>
     <p data-t="coverText"></p>
@@ -298,6 +339,9 @@ textarea{min-height:90px}
     <p class="credits" id="credits"></p>
   </div>
   <a class="fab" href="#rsvp" aria-label="Go to RSVP">RSVP</a>
+  <button id="musicBtn" type="button" aria-label="Turn music off" aria-pressed="true" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/><path class="slash" d="M3 3l18 18"/></svg>
+  </button>
 </div>
 
 <script>
@@ -310,6 +354,10 @@ const CONFIG = {
   name1: "Jonel",
   name2: "Julleane",
   coverText: "Tap to open",
+  // MUSIC: put your song file next to this page (e.g. "music.mp3") and type its name below.
+  // It starts when guests tap to open the doors. Leave it empty ("") for no music.
+  music: "",
+  musicVolume: 0.6,                      // 0 (silent) to 1 (full)
   intro: "Together with their families",
   invite: "invite you to celebrate their wedding",
   openButton: "Open invitation",
@@ -443,7 +491,43 @@ clearHash(); toTop();
 addEventListener("load", () => { clearHash(); toTop(); });
 addEventListener("pageshow", e => { if(e.persisted){ clearHash(); toTop(); } });
 
-const cover = $("#cover"), open = () => { toTop(); cover.classList.add("open"); $("#app").classList.add("go"); };
+// Fairy-dust burst from the seal when the doors open
+const burst = () => {
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cols = ["#ffe9a8", "#f3d180", "#d8b45e", "#ffffff"], n = innerWidth < 500 ? 34 : 54, R = Math.max(innerWidth, innerHeight);
+  for(let i = 0; i < n; i++){
+    const d = document.createElement("span"), a = Math.random() * Math.PI * 2, r = R * (0.18 + Math.random() * 0.42), star = i % 3 === 0;
+    d.className = "dust" + (star ? " st" : "");
+    d.style.setProperty("--dx", Math.cos(a) * r + "px");
+    d.style.setProperty("--dy", Math.sin(a) * r * 0.8 + "px");
+    d.style.setProperty("--sz", (star ? 9 + Math.random() * 11 : 3 + Math.random() * 4) + "px");
+    d.style.setProperty("--c", cols[i % cols.length]);
+    d.style.setProperty("--t", (1.1 + Math.random() * 1.2) + "s");
+    d.style.setProperty("--d", (Math.random() * 0.35) + "s");
+    cover.appendChild(d);
+  }
+};
+// Background music: starts on the tap that opens the doors
+const bgm = C.music ? Object.assign(new Audio(C.music), {loop:true, preload:"auto", volume:0}) : null;
+const musicBtn = $("#musicBtn"); let wantMusic = false, fadeT = 0;
+const fadeTo = (v, ms, done) => {
+  clearInterval(fadeT); const from = bgm.volume, t0 = performance.now();
+  fadeT = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / ms); bgm.volume = Math.max(0, Math.min(1, from + (v - from) * k)); if(k === 1){ clearInterval(fadeT); done && done(); } }, 50);
+};
+const setMusicUI = on => { musicBtn.classList.toggle("playing", on); musicBtn.classList.toggle("off", !on); musicBtn.setAttribute("aria-pressed", String(on)); musicBtn.setAttribute("aria-label", on ? "Turn music off" : "Turn music on"); };
+const playMusic = () => { wantMusic = true; bgm.play().then(() => { setMusicUI(true); fadeTo(C.musicVolume ?? 0.6, 2500); }).catch(() => { wantMusic = false; setMusicUI(false); }); };
+const pauseMusic = () => { wantMusic = false; setMusicUI(false); fadeTo(0, 400, () => bgm.pause()); };
+if(bgm){
+  musicBtn.addEventListener("click", () => wantMusic ? pauseMusic() : playMusic());
+  document.addEventListener("visibilitychange", () => { if(document.hidden){ bgm.pause(); } else if(wantMusic){ bgm.play().catch(() => {}); } });
+}
+
+const cover = $("#cover"), open = () => {
+  if(cover.classList.contains("open")) return;
+  toTop(); burst(); cover.classList.add("open"); $("#app").classList.add("go");
+  if(bgm){ musicBtn.hidden = false; setMusicUI(false); playMusic(); }
+  setTimeout(() => { cover.style.display = "none"; }, 3000);
+};
 cover.addEventListener("click", open);
 cover.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" ") open(); });
 
