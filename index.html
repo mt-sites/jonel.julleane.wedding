@@ -90,7 +90,52 @@ h1,h2{font-family:var(--display);font-weight:400;margin:0}
 /* HERO */
 .hero{min-height:100svh;background:radial-gradient(ellipse at 50% 30%,var(--cover2),var(--cover) 70%);color:var(--light);text-align:center;padding:90px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
 .hero .arch{position:absolute;inset:26px 26px auto;height:62%;border:2px solid rgba(255,247,239,.5);border-radius:200px 200px 0 0}
-.hero svg.chand{width:110px;margin-bottom:10px;position:relative}
+.scene{position:relative;width:min(88vw,330px);aspect-ratio:330/220;margin-bottom:6px;perspective:900px;perspective-origin:50% 40%}
+.sway,.stage{position:absolute;inset:0;transform-style:preserve-3d}
+.sway{animation:swayY 9s ease-in-out infinite}
+@keyframes swayY{0%,100%{transform:rotateY(-6deg) rotateX(2deg)}50%{transform:rotateY(6deg) rotateX(-1deg)}}
+.stage{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.ly{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d}
+.ly.sky{transform:translateZ(-140px) scale(1.18)}
+.rays{position:absolute;left:50%;top:52%;width:150%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);
+  background:repeating-conic-gradient(from 0deg,rgba(255,236,190,.2) 0 4deg,transparent 4deg 15deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 62%);mask-image:radial-gradient(circle,#000 0,transparent 62%);animation:raySpin 48s linear infinite}
+@keyframes raySpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.halo{position:absolute;left:50%;top:56%;width:86%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,244,214,.55),rgba(216,180,94,.2) 42%,transparent 70%);animation:haloPulse 5s ease-in-out infinite}
+@keyframes haloPulse{50%{opacity:.6;transform:translate(-50%,-50%) scale(1.08)}}
+.tws{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff3c8;box-shadow:0 0 8px 2px rgba(255,236,170,.8);animation:tw 3s infinite}
+.cloud{overflow:visible}
+.cloud i{position:absolute;display:block;border-radius:50px;background:rgba(255,255,255,.2);filter:blur(1.5px)}
+.cloud i::before,.cloud i::after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud.c1{transform:translateZ(-80px) scale(1.1)}
+.cloud.c1 i{left:-30%;top:22%;width:34%;height:9%;animation:cloudA 38s linear infinite}
+.cloud.c1 i::before{width:42%;height:150%;left:14%;top:-70%}.cloud.c1 i::after{width:34%;height:120%;left:50%;top:-50%}
+.cloud.c2{transform:translateZ(-40px) scale(1.05)}
+.cloud.c2 i{left:-30%;top:42%;width:26%;height:7%;opacity:.8;animation:cloudA 27s linear -12s infinite}
+.cloud.c2 i::before{width:44%;height:150%;left:12%;top:-70%}.cloud.c2 i::after{width:34%;height:120%;left:52%;top:-50%}
+@keyframes cloudA{to{transform:translateX(420%)}}
+.ly.church{display:flex;align-items:flex-end;justify-content:center;transform:translateZ(0)}
+.churchsvg{display:block;width:84%;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35)) drop-shadow(0 0 22px rgba(255,236,190,.25))}
+.churchsvg .win{animation:winGlow 4s ease-in-out infinite}
+@keyframes winGlow{0%,100%{opacity:1}50%{opacity:.72}}
+.churchsvg .bell{transform-box:fill-box;transform-origin:50% 0;animation:bellSwing 2.4s ease-in-out infinite}
+@keyframes bellSwing{0%,100%{transform:rotate(-13deg)}50%{transform:rotate(13deg)}}
+.churchsvg .cglint{transform-box:fill-box;transform-origin:center;animation:glint 3.4s ease-in-out 1s infinite;opacity:0}
+.ly.flyer{transform:translateZ(0)}
+.dove{position:absolute;left:50%;top:38%;width:24%;margin-left:-12%;will-change:transform;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)) drop-shadow(0 0 14px rgba(255,255,255,.45))}
+.dovesvg{display:block;width:100%;height:auto;overflow:visible}
+.dovesvg .wing{transform-box:view-box;transform-origin:66px 46px;animation:flap .62s ease-in-out infinite}
+.dovesvg .wing.far{animation-delay:-.07s}
+@keyframes flap{0%,100%{transform:rotate(8deg) scaleY(1)}50%{transform:rotate(78deg) scaleY(.82)}}
+.dovesvg .olive{transform-box:fill-box;transform-origin:0 50%;animation:oliveBob .62s ease-in-out infinite}
+@keyframes oliveBob{50%{transform:rotate(6deg)}}
+.ly.fx{transform:translateZ(60px)}
+.fx .sp{position:absolute;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:#fff3c8;box-shadow:0 0 8px 2px rgba(255,226,150,.9);animation:spFade 1.3s ease-out forwards}
+@keyframes spFade{0%{opacity:.95;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+.fx .fe{position:absolute;width:15px;height:15px;margin:-7px;opacity:0;animation:feFall 3.2s ease-in forwards;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M3 38C6 20 18 6 36 2c-1 18-12 31-33 36Z' fill='%23ffffff'/%3E%3Cpath d='M5 36C14 24 22 14 33 5' stroke='%23c3cfe8' stroke-width='1.600' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;filter:drop-shadow(0 0 4px rgba(255,255,255,.6))}
+@keyframes feFall{0%{opacity:0;transform:translate3d(0,0,0) rotateX(0) rotateY(0) rotateZ(0)}12%{opacity:.95}100%{opacity:0;transform:translate3d(var(--dx),calc(var(--dy) + 80px),0) rotateX(300deg) rotateY(260deg) rotateZ(200deg)}}
 .hero small{letter-spacing:.06em;position:relative}
 .names{font-size:clamp(2.6rem,13vw,3.8rem);line-height:1.05;margin:16px 0;position:relative}
 .names i{display:block;font-family:var(--body);font-style:normal;font-size:.35em;color:var(--gold);margin:6px 0}
@@ -167,7 +212,6 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}legend{font-weight:400
 .petal{position:absolute;top:-24px;width:11px;height:15px;border-radius:80% 0 80% 0;background:var(--gold);opacity:.85;animation:fall linear infinite}
 .petal.w{background:var(--light);opacity:.75}
 @keyframes fall{0%{transform:translate3d(0,0,0) rotate(0)}100%{transform:translate3d(var(--dx),calc(100svh + 50px),0) rotate(600deg)}}
-.hero svg.chand{transform-origin:50% 0;animation:sway 5s ease-in-out infinite}
 @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 #seal svg{animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.07)}}
@@ -193,7 +237,7 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}legend{font-weight:400
 @media (min-width:768px){#musicBtn{left:max(24px,env(safe-area-inset-left,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
 @media (prefers-reduced-motion:reduce){#musicBtn.playing{animation:none}}
 @keyframes bob{50%{transform:translateY(-5px)}}
-@media (prefers-reduced-motion:reduce){.mletters,.mdia,.mring,.marc,.mshine,.mstar{animation:none}.mshine,.glint{display:none}.petal{display:none}.hero svg.chand,#seal svg,.rule,.names i,.fab{animation:none}.hero .rise,.reveal{opacity:1;transform:none;transition:none}#app.go .rise{animation:none}}
+@media (prefers-reduced-motion:reduce){.mletters,.mdia,.mring,.marc,.mshine,.mstar{animation:none}.mshine,.glint{display:none}.petal{display:none}.sway,.rays,.halo,.cloud i,.churchsvg .win,.churchsvg .bell,.churchsvg .cglint,.dovesvg .wing,.dovesvg .olive,#seal svg,.rule,.names i,.fab{animation:none}.fx{display:none}.hero .rise,.reveal{opacity:1;transform:none;transition:none}#app.go .rise{animation:none}}
 
 /* MOBILE FRIENDLY */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -233,7 +277,7 @@ textarea{min-height:90px}
   #seal,#seal svg{width:250px}
   .hero{padding-inline:48px}
   .hero .arch{left:50%;right:auto;width:min(640px,calc(100% - 48px));transform:translateX(-50%);border-radius:320px 320px 0 0}
-  .hero svg.chand{width:150px}
+  .scene{width:420px}
   .names{font-size:clamp(3.8rem,7.5vw,7rem)}
   .hero .when{font-size:1.4rem}
   .hero>small{font-size:1.05rem}
@@ -253,7 +297,7 @@ textarea{min-height:90px}
 @media (min-width:1200px){
   body{font-size:18px}
   .names{font-size:clamp(5rem,7vw,8rem)}
-  .hero svg.chand{width:170px}
+  .scene{width:480px}
   .page h2{font-size:2.4rem}
   .frame{gap:26px;padding-top:56px}
   .frame .page{padding:60px 48px}
@@ -263,7 +307,7 @@ textarea{min-height:90px}
 }
 @media (max-height:520px) and (orientation:landscape){
   .hero{padding-top:50px;padding-bottom:40px}
-  .hero svg.chand{width:70px}
+  .scene{width:min(40vh,210px);margin-bottom:0}
   .names{margin:8px 0}
   #seal{width:130px}#seal svg{width:130px}
 }
@@ -313,7 +357,65 @@ textarea{min-height:90px}
     <div class="arch"></div>
     <div class="petals"></div>
     <span class="spark" style="top:30%;left:20%"></span><span class="spark" style="top:45%;left:78%;animation-delay:1s"></span><span class="spark" style="top:60%;left:30%;animation-delay:2s"></span><span class="spark" style="top:36%;left:60%;animation-delay:.5s"></span>
-    <svg class="chand rise" style="--i:0" viewBox="0 0 100 90" fill="none" stroke="var(--light)" stroke-width="1.5"><path d="M50 0v14M30 24h40M22 34h56M14 44h72"/><path d="M50 14c-14 0-24 6-28 20M50 14c14 0 24 6 28 20M22 34c-6 6-8 12-8 18M78 34c6 6 8 12 8 18"/><g stroke="var(--gold)"><path d="M30 24v10M50 24v10M70 24v10M22 44v14M50 44v22M78 44v14"/></g></svg>
+    <div class="scene rise" style="--i:0" aria-hidden="true">
+      <div class="sway"><div class="stage" id="stage">
+        <div class="ly sky"><i class="rays"></i><i class="halo"></i><i class="tws" style="left:14%;top:16%"></i><i class="tws" style="left:84%;top:22%;animation-delay:1s"></i><i class="tws" style="left:70%;top:8%;animation-delay:2s"></i><i class="tws" style="left:26%;top:34%;animation-delay:.5s"></i></div>
+        <div class="ly cloud c1"><i></i></div>
+        <div class="ly cloud c2"><i></i></div>
+        <div class="ly church"><svg class="churchsvg" viewBox="0 -16 300 206" aria-hidden="true">
+  <defs>
+    <linearGradient id="cw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f5f8fd"/><stop offset="1" stop-color="#c9d5ec"/></linearGradient>
+    <linearGradient id="cr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f4fc"/><stop offset="1" stop-color="#b3c2e4"/></linearGradient>
+    <linearGradient id="cwin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset="1" stop-color="#efb445"/></linearGradient>
+    <radialGradient id="cbell" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#c99c40"/></radialGradient>
+  </defs>
+  <ellipse cx="150" cy="172" rx="134" ry="8" fill="#000" opacity=".28"/>
+  <g stroke="#b2c0e1" stroke-width=".8" stroke-linejoin="round">
+    <rect x="56" y="98" width="70" height="64" fill="url(#cw)"/>
+    <rect x="174" y="98" width="70" height="64" fill="url(#cw)"/>
+    <path d="M50 100 91 64 132 100Z" fill="url(#cr)"/>
+    <path d="M168 100 209 64 250 100Z" fill="url(#cr)"/>
+    <path d="M91 64 132 100H91Z" fill="#9fb0d8" opacity=".35" stroke="none"/>
+    <path d="M209 64 250 100H209Z" fill="#9fb0d8" opacity=".35" stroke="none"/>
+    <rect x="120" y="64" width="60" height="98" fill="url(#cw)"/>
+    <rect x="116" y="62" width="68" height="6" fill="#e7edf9"/>
+    <path d="M113 64 150 4 187 64Z" fill="url(#cr)"/>
+    <path d="M150 4 187 64H150Z" fill="#9fb0d8" opacity=".4" stroke="none"/>
+    <rect x="52" y="160" width="196" height="5" fill="#e4eaf7"/>
+  </g>
+  <g fill="#d8b45e"><circle cx="91" cy="62" r="2.6"/><circle cx="209" cy="62" r="2.6"/><rect x="148.6" y="-15" width="2.8" height="20"/><rect x="143" y="-9" width="14" height="2.8"/></g>
+  <path d="M138 94V82a12 12 0 0 1 24 0V94Z" fill="#33477f" stroke="#d8b45e" stroke-width=".9"/>
+  <g class="bell"><path d="M150 72v3" stroke="#c99c40" stroke-width="1.2"/><path d="M144.500 90c0-8 2.500-13 5.500-13s5.500 5 5.500 13z" fill="url(#cbell)"/><circle cx="150" cy="91" r="1.700" fill="#c99c40"/></g>
+  <g class="win" stroke="#d8b45e" stroke-width=".9">
+    <circle cx="150" cy="112" r="9" fill="url(#cwin)"/><path d="M150 103v18M141 112h18M143.500 105.500l13 13M156.500 105.500l-13 13" stroke-width=".6"/>
+    <path d="M71 148V128a7 7 0 0 1 14 0V148Z" fill="url(#cwin)"/><path d="M97 148V128a7 7 0 0 1 14 0V148Z" fill="url(#cwin)"/>
+    <path d="M189 148V128a7 7 0 0 1 14 0V148Z" fill="url(#cwin)"/><path d="M215 148V128a7 7 0 0 1 14 0V148Z" fill="url(#cwin)"/>
+  </g>
+  <g stroke="#a98a43" stroke-width=".5"><path d="M78 121v27M104 121v27M196 121v27M222 121v27M71 136h14M97 136h14M189 136h14M215 136h14" fill="none"/></g>
+  <path d="M136 162V140a14 14 0 0 1 28 0V162Z" fill="#33477f" stroke="#d8b45e" stroke-width="1"/>
+  <path d="M150 126v36" stroke="#d8b45e" stroke-width=".8"/><circle cx="145" cy="150" r="1.200" fill="#d8b45e"/><circle cx="155" cy="150" r="1.200" fill="#d8b45e"/>
+  <rect x="127" y="162" width="46" height="4" fill="#eaf0fb"/><rect x="121" y="166" width="58" height="4" fill="#dce5f5"/>
+  <path class="cglint" d="M150-17 151.800-11 158-9 151.800-7 150-1 148.200-7 142-9 148.200-11Z" fill="#fff8de"/>
+</svg></div>
+        <div class="ly flyer"><div class="dove" id="dove"><svg class="dovesvg" viewBox="0 0 132 92" aria-hidden="true">
+  <defs>
+    <linearGradient id="dw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d8e1f3"/></linearGradient>
+    <linearGradient id="db" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3eaf8"/></linearGradient>
+  </defs>
+  <g class="wing far"><path d="M64 46C60 26 44 10 18 4 26 12 30 20 31 27 26 25 22 25 17 27 29 33 42 39 54 48Z" fill="#cfd9ee" stroke="#b7c5e4" stroke-width=".6"/></g>
+  <path d="M40 54 3 47 10 55 2 63 13 65 8 73 44 62Z" fill="url(#db)" stroke="#c3cfe8" stroke-width=".6" stroke-linejoin="round"/>
+  <path d="M30 56 10 55M32 59 12 66M34 61 18 70" stroke="#c3cfe8" stroke-width=".5" fill="none"/>
+  <ellipse cx="62" cy="52" rx="31" ry="13" transform="rotate(-8 62 52)" fill="url(#db)" stroke="#c3cfe8" stroke-width=".6"/>
+  <path d="M84 48 90 33 102 43 94 56Z" fill="url(#db)"/>
+  <circle cx="95" cy="40" r="9.500" fill="url(#db)" stroke="#c3cfe8" stroke-width=".6"/>
+  <path d="M103 38 116 43 103 46Z" fill="#e8a23a"/>
+  <circle cx="98" cy="37" r="1.700" fill="#1a2a55"/>
+  <g class="olive"><path d="M114 44q9 5 16 -3" fill="none" stroke="#6f9a58" stroke-width="1.300" stroke-linecap="round"/><ellipse cx="119" cy="44" rx="3.800" ry="1.700" transform="rotate(-25 119 44)" fill="#7fb069"/><ellipse cx="124" cy="45" rx="3.800" ry="1.700" transform="rotate(25 124 45)" fill="#7fb069"/><ellipse cx="128" cy="41" rx="3.500" ry="1.600" transform="rotate(-35 128 41)" fill="#8fc079"/></g>
+  <g class="wing near"><path d="M66 46C62 25 45 9 17 3 25 11 30 19 32 26 27 25 22 25 16 27 29 34 43 40 55 49Z" fill="url(#dw)" stroke="#b7c5e4" stroke-width=".7"/><path d="M60 42C50 28 38 16 22 8M54 44C44 34 34 26 22 22M48 46C40 40 32 35 24 32" stroke="#c3cfe8" stroke-width=".6" fill="none"/></g>
+</svg></div></div>
+        <div class="ly fx" id="sceneFx"></div>
+      </div></div>
+    </div>
     <small class="rise" style="--i:1" data-t="intro"></small>
     <h1 class="names rise" style="--i:2"><span data-t="name1"></span><i>and</i><span data-t="name2"></span></h1>
     <small class="rise" style="--i:3" data-t="invite"></small>
@@ -400,7 +502,7 @@ const CONFIG = {
   music: "music.mp3",
   musicVolume: 0.6,                      // 0 (silent) to 1 (full)
   intro: "Together with their families",
-  invite: "invite you to celebrate their wedding",
+  invite: "Inviting you to celebrate their wedding",
   openButton: "Open invitation",
   welcomeTitle: "You are invited",
   welcomeText: "With joy in our hearts, we invite you to share the beginning of our life together. Your presence will make our day complete.",
@@ -438,7 +540,7 @@ const CONFIG = {
   gallery: ["", "", "", ""],             // any number of photos, e.g. ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg"]
   photo: "",                             // couple photo, e.g. "couple.jpg"
   rsvpTitle: "RSVP",
-  rsvpText: "Please reply by 1 October 2026",
+  rsvpText: "Please reply by December 1, 2026",
   // Google Form link: run rsvp-google-form.gs, then paste the 5 values it prints
   googleForm: {
     action: "https://docs.google.com/forms/d/e/1FAIpQLSe7sGyVx0Zg_UIl0PaEwzpuItEKvpFF008wRpQH0JliBJ0Q1Q/formResponse",                          // ends with /formResponse
@@ -452,7 +554,7 @@ const CONFIG = {
   closing: "With love, Jonel and Julleane",
   credits: "Made with:",    // small text at the very bottom (clear it to hide)
   creditsLinkText: "mt.sites",                  // the clickable part
-  // creditsUrl: "https://github.com/mt-sites" ,                         // where the link goes
+   creditsUrl: "https://taploop.mt-sites.workers.dev/" ,                         // where the link goes
 
   // ---- COLORS ----
   theme: "midnight",
@@ -563,9 +665,46 @@ if(bgm){
   document.addEventListener("visibilitychange", () => { if(document.hidden){ bgm.pause(); } else if(wantMusic){ bgm.play().catch(() => {}); } });
 }
 
+// Church scene: dove flies a 3D loop around the church, scene tilts with pointer, sparkles and feathers trail behind
+const scene = $(".scene"), stage = $("#stage"), dove = $("#dove"), fx = $("#sceneFx"), hero = $(".hero");
+let sceneOn = false, heroVisible = true;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function startScene(){
+  if(sceneOn || reduceMotion) return; sceneOn = true;
+  const w = scene.offsetWidth, h = scene.offsetHeight, A = w * 0.42, Z = w * 0.5, N = 72, kf = [];
+  const sm = x => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }, wd = 0.5;
+  for(let i = 0; i <= N; i++){
+    const u = i / N, p = wd + u * Math.PI * 2;
+    const x = -A * Math.cos(p), z = Z * Math.sin(p);
+    const y = h * (0.12 * Math.sin(p) + 0.02 * Math.sin(p * 3)) - h * 0.04;
+    const ry = 180 * sm((p - (Math.PI - wd)) / (2 * wd)) + 180 * sm((p - (Math.PI * 2 - wd)) / (2 * wd));
+    const bank = Math.cos(p) * -7;
+    kf.push({ offset: u, transform: `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateY(${ry.toFixed(1)}deg) rotateZ(${bank.toFixed(1)}deg)` });
+  }
+  dove.animate(kf, { duration: 17000, iterations: Infinity, easing: "linear" });
+  new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
+  // pointer / tilt parallax
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  hero.addEventListener("pointermove", e => { const r = hero.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5; });
+  hero.addEventListener("pointerleave", () => { tx = ty = 0; });
+  addEventListener("deviceorientation", e => { if(e.gamma == null) return; tx = Math.max(-0.5, Math.min(0.5, e.gamma / 60)); ty = Math.max(-0.5, Math.min(0.5, ((e.beta || 60) - 60) / 90)); });
+  (function tick(){ if(heroVisible){ cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06; stage.style.setProperty("--ry", (cx * 24).toFixed(2) + "deg"); stage.style.setProperty("--rx", (-cy * 16).toFixed(2) + "deg"); } requestAnimationFrame(tick); })();
+  // trail
+  let n = 0;
+  setInterval(() => {
+    if(!heroVisible || document.hidden) return;
+    const r = dove.getBoundingClientRect(), s = scene.getBoundingClientRect(); if(!r.width) return;
+    const el = document.createElement("span"), feather = (++n % 7 === 0);
+    el.className = feather ? "fe" : "sp";
+    el.style.left = (r.left + r.width * 0.5 - s.left) + "px"; el.style.top = (r.top + r.height * 0.6 - s.top) + "px";
+    el.style.setProperty("--dx", (Math.random() * 30 - 15) + "px"); el.style.setProperty("--dy", (Math.random() * 20 - 4) + "px");
+    fx.appendChild(el); setTimeout(() => el.remove(), feather ? 3300 : 1400);
+  }, 150);
+}
+
 const cover = $("#cover"), open = () => {
   if(cover.classList.contains("open")) return;
-  toTop(); burst(); cover.classList.add("open"); $("#app").classList.add("go");
+  toTop(); burst(); cover.classList.add("open"); $("#app").classList.add("go"); setTimeout(startScene, 500);
   if(bgm){ musicBtn.hidden = false; setMusicUI(false); playMusic(); }
   setTimeout(() => { cover.style.display = "none"; }, 3000);
 };
