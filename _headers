@@ -1,0 +1,6 @@
+/preview1.jpg
+  Cache-Control: public, max-age=3600
+  Access-Control-Allow-Origin: *
+/preview-square.jpg
+  Cache-Control: public, max-age=3600
+  Access-Control-Allow-Origin: *
